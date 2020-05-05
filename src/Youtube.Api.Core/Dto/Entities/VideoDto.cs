@@ -16,6 +16,7 @@ namespace Youtube.Api.Core.Dto.Entities
         public int Likes { get; set; }
         public int Dislikes { get; set; }
         public string Description { get; set; }
+        public string Name { get; set; }
 
         public UploadedFileDto IdNavigation { get; set; }
         public ICollection<CommentDto> Comments { get; set; }

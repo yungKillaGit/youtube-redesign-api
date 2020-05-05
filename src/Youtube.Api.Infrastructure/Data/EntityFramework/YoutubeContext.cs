@@ -283,6 +283,8 @@ namespace Youtube.Api.Infrastructure.Data
                     .HasColumnName("id")
                     .ValueGeneratedNever();
 
+                entity.Property(e => e.Name).IsRequired().HasColumnName("name");
+
                 entity.Property(e => e.Description).HasColumnName("description");
 
                 entity.Property(e => e.Dislikes).HasColumnName("dislikes");

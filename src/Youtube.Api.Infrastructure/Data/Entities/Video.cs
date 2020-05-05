@@ -16,6 +16,7 @@ namespace Youtube.Api.Infrastructure.Data.Entities
         public int Likes { get; set; }
         public int Dislikes { get; set; }
         public string Description { get; set; }
+        public string Name { get; set; }
 
         public virtual UploadedFile IdNavigation { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }

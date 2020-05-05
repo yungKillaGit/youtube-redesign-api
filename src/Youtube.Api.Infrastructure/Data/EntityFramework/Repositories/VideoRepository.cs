@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Youtube.Api.Core.Dto.Entities;
 using Youtube.Api.Core.Interfaces.Gateways.Repositories;
@@ -26,6 +27,11 @@ namespace Youtube.Api.Infrastructure.Data.EntityFramework.Repositories
         public VideoDto FindById(int id)
         {
             return _mapper.Map<VideoDto>(_database.Videos.Find(id));
+        }
+
+        public IEnumerable<VideoDto> FindByName(string name)
+        {
+            return _mapper.Map<IEnumerable<VideoDto>>(_database.Videos.Where(x => x.Name == name).ToList());
         }
     }
 }
