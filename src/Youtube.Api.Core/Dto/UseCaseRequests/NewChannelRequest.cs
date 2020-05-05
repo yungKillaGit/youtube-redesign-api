@@ -11,8 +11,9 @@ namespace Youtube.Api.Core.Dto.UseCaseRequests
         public int UserId { get; }
         public DateTime RegistrationDate { get; }
         public string Description { get; }
+        public string Name { get; }
 
-        public NewChannelRequest(int userId, DateTime registrationDate, string description)
+        public NewChannelRequest(int userId, DateTime registrationDate, string description, string name)
         {
             UserId = userId;
             RegistrationDate = registrationDate;

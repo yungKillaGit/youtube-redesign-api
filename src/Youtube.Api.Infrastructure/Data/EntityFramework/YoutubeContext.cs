@@ -74,6 +74,10 @@ namespace Youtube.Api.Infrastructure.Data
                     .HasName("channels_userId_key")
                     .IsUnique();
 
+                entity.HasIndex(e => e.Name)
+                    .HasName("channels_name_key")
+                    .IsUnique();
+
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
                     .UseIdentityAlwaysColumn();
@@ -83,6 +87,10 @@ namespace Youtube.Api.Infrastructure.Data
                 entity.Property(e => e.RegistrationDate)
                     .HasColumnName("registrationDate")
                     .HasColumnType("date");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name");
 
                 entity.Property(e => e.UserId).HasColumnName("userId");
 

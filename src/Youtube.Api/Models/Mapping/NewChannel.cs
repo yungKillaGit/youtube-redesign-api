@@ -14,7 +14,8 @@ namespace Youtube.Api.Models.Mapping
             CreateMap<Models.Requests.NewChannelRequest, NewChannelRequest>().ConstructUsing(x => new NewChannelRequest(
                 x.UserId,
                 DateTime.Parse(x.RegistrationDate),
-                x.Description
+                x.Description,
+                x.Name
             ));
         }
     }

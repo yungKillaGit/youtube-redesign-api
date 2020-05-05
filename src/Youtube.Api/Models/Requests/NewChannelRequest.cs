@@ -10,5 +10,6 @@ namespace Youtube.Api.Models.Requests
         public int UserId { get; set; }
         public string RegistrationDate { get; set; }
         public string Description { get; set; }
+        public string Name { get; set; }
     }
 }

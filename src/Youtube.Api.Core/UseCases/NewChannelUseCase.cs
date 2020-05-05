@@ -39,6 +39,7 @@ namespace Youtube.Api.Core.UseCases
                 UserId = useCaseRequest.UserId,
                 RegistrationDate = useCaseRequest.RegistrationDate,
                 Description = useCaseRequest.Description,
+                Name = useCaseRequest.Name,
             };
             int channelId = _channelRepository.Create(channelInfo);
             outputPort.Handle(new NewChannelResponse(channelId));
