@@ -36,7 +36,7 @@ namespace Youtube.Api.Infrastructure.Data.EntityFramework.Repositories
 
         public ChannelDto FindByName(string name)
         {
-            return _mapper.Map<ChannelDto>(_database.Channels.Where(x => x.Name == name).FirstOrDefault());
+            return _mapper.Map<ChannelDto>(_database.Channels.Where(x => x.Name.ToLower() == name).FirstOrDefault());
         }
 
         public ChannelDto FindByUserId(int userId)

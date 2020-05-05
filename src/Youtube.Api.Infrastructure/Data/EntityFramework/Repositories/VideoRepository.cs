@@ -31,7 +31,7 @@ namespace Youtube.Api.Infrastructure.Data.EntityFramework.Repositories
 
         public IEnumerable<VideoDto> FindByName(string name)
         {
-            return _mapper.Map<IEnumerable<VideoDto>>(_database.Videos.Where(x => x.Name == name).ToList());
+            return _mapper.Map<IEnumerable<VideoDto>>(_database.Videos.Where(x => x.Name.ToLower() == name).ToList());
         }
     }
 }
