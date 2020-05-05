@@ -107,6 +107,7 @@ namespace Youtube.Api
 			builder.RegisterType<LoginPresenter>().SingleInstance();
 			builder.RegisterType<RegisterUserPresenter>().SingleInstance();
 			builder.RegisterType<NewCommentPresenter>().SingleInstance();
+			builder.RegisterType<NewSubscriberPresenter>().SingleInstance();
 			builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).Where(t => t.Name.EndsWith("Presenter")).SingleInstance();
 
 			builder.Populate(services);
