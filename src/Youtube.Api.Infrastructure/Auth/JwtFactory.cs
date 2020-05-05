@@ -33,8 +33,7 @@ namespace Youtube.Api.Infrastructure.Auth
                  identity.FindFirst(Constants.Strings.JwtClaimIdentifiers.Rol),
                  identity.FindFirst(Constants.Strings.JwtClaimIdentifiers.Id)
              };
-
-            // Create the JWT security token and encode it.
+            
             var jwt = new JwtSecurityToken(
                 _jwtOptions.Issuer,
                 _jwtOptions.Audience,

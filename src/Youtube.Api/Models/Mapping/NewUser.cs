@@ -8,9 +8,9 @@ using Youtube.Api.Infrastructure.Auth;
 
 namespace Youtube.Api.Models.Mapping
 {
-    public class RegisterUserRequests : Profile
+    public class NewUser : Profile
     {
-        public RegisterUserRequests()
+        public NewUser()
         {
             CreateMap<Models.Requests.RegisterUserRequest, RegisterUserRequest>().ConstructUsing(x => new RegisterUserRequest()
             {

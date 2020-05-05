@@ -38,9 +38,9 @@ namespace Youtube.Api.Infrastructure.Data.EntityFramework.Repositories
             return _mapper.Map<UserDto>(desiredUser);
         }
 
-        private User FindById(int id)
+        public UserDto FindById(int id)
         {
-            return _database.Users.Find(id);
+            return _mapper.Map<UserDto>(_database.Users.Find(id));
         }
     }
 }

@@ -9,6 +9,7 @@ namespace Youtube.Api.Core.Interfaces.Gateways.Repositories
     public interface IUserRepository
     {
         CreatedUserResponse Create(UserDto userInfo);
-        UserDto FindByEmail(string email);        
+        UserDto FindByEmail(string email);
+        UserDto FindById(int id);
     }
 }

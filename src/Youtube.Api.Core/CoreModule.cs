@@ -14,7 +14,8 @@ namespace Youtube.Api.Core
             builder.RegisterType<SectionListUseCase>().As<ISectionListUseCase>().InstancePerLifetimeScope();
             builder.RegisterType<NewSectionUseCase>().As<INewSectionUseCase>().InstancePerLifetimeScope();
             builder.RegisterType<LoginUseCase>().As<ILoginUseCase>().InstancePerLifetimeScope();
-            builder.RegisterType<RegisterUserUseCase>().As<IRegisterUserUseCase>().InstancePerLifetimeScope();            
+            builder.RegisterType<RegisterUserUseCase>().As<IRegisterUserUseCase>().InstancePerLifetimeScope();
+            builder.RegisterType<NewCommentUseCase>().As<INewCommentUseCase>().InstancePerLifetimeScope();
         }
     }
 }
