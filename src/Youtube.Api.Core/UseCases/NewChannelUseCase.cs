@@ -34,6 +34,11 @@ namespace Youtube.Api.Core.UseCases
                 outputPort.Handle(new NewChannelResponse(new[] { new Error(422, "user already have channel") }));
                 return false;
             }
+            if (_channelRepository.FindByName(useCaseRequest.Name) != null)
+            {
+                outputPort.Handle(new NewChannelResponse(new[] { new Error(422, "channel name is busy") }));
+                return false;
+            }
             var channelInfo = new ChannelDto()
             {
                 UserId = useCaseRequest.UserId,

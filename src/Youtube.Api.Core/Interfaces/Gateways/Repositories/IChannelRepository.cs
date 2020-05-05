@@ -9,5 +9,7 @@ namespace Youtube.Api.Core.Interfaces.Gateways.Repositories
     {
         int Create(ChannelDto channelInfo);
         ChannelDto FindByUserId(int userId);
+        ChannelDto FindById(int id);
+        ChannelDto FindByName(string name);
     }
 }
