@@ -53,15 +53,19 @@ namespace Youtube.Api.Infrastructure.Data.EntityFramework.Repositories
             {
                 throw new NotImplementedException("disliked section doesnt exist or section name is wrong");
             }
+
             SectionedVideo userLikedVideo = GetSectionedVideo(videoId, userId, likedSection.Id);
             SectionedVideo userDislikedVideo = GetSectionedVideo(videoId, userId, dislikedSection.Id);
+            Video video = _database.Videos.Find(videoId);
+
             if (userLikedVideo != null)
             {
-                _database.SectionedVideos.Remove(userLikedVideo);
-                _database.SaveChanges();
-            }
+                video.Likes--;
+                _database.Videos.Update(video);
 
-            Video video = _database.Videos.Find(videoId);
+                _database.SectionedVideos.Remove(userLikedVideo);                
+            }
+            
             if (userDislikedVideo == null)
             {                
                 video.Dislikes++;
@@ -100,14 +104,16 @@ namespace Youtube.Api.Infrastructure.Data.EntityFramework.Repositories
 
             SectionedVideo userLikedVideo = GetSectionedVideo(videoId, userId, likedSection.Id);
             SectionedVideo userDislikedVideo = GetSectionedVideo(videoId, userId, dislikedSection.Id);
+            Video video = _database.Videos.Find(videoId);
 
             if (userDislikedVideo != null)
             {
-                _database.SectionedVideos.Remove(userDislikedVideo);
-                _database.SaveChanges();
-            }
+                video.Dislikes--;
+                _database.Videos.Update(video);
 
-            Video video = _database.Videos.Find(videoId);
+                _database.SectionedVideos.Remove(userDislikedVideo);                
+            }
+            
             if (userLikedVideo == null)
             {                
                 video.Likes++;
