@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Youtube.Api.Core.Dto.UseCaseRequests;
 using Youtube.Api.Core.Interfaces.UseCases;
+using Youtube.Api.Extensions;
 using Youtube.Api.Presenters;
 
 namespace Youtube.Api.Controllers
@@ -16,23 +18,23 @@ namespace Youtube.Api.Controllers
     public class ChannelsController : ControllerBase
     {
         private readonly INewChannelUseCase _newChannelUseCase;
-        private readonly INewSubscriberUseCase _newSubscriberUseCase;
+        private readonly ISubscriptionProcessingUseCase _subscriptionProcessingUseCase;
         private readonly NewChannelPresenter _newChannelPresenter;
-        private readonly NewSubscriberPresenter _newSubscriberPresenter;
+        private readonly SubscriptionProcessingPresenter _subscriptionProcessingPresenter;
         private readonly IMapper _mapper;
 
         public ChannelsController(
-            INewSubscriberUseCase newSubscriberUseCase,
+            ISubscriptionProcessingUseCase subscriptionProcessingUseCase,
             INewChannelUseCase newChannelUseCase,
             NewChannelPresenter newChannelPresenter,
-            NewSubscriberPresenter newSubscriberPresenter,
+            SubscriptionProcessingPresenter subscriptionProcessingPresenter,
             IMapper mapper
         )
         {
-            _newSubscriberUseCase = newSubscriberUseCase;
+            _subscriptionProcessingUseCase = subscriptionProcessingUseCase;
             _newChannelUseCase = newChannelUseCase;
             _newChannelPresenter = newChannelPresenter;
-            _newSubscriberPresenter = newSubscriberPresenter;
+            _subscriptionProcessingPresenter = subscriptionProcessingPresenter;
             _mapper = mapper;
         }
 
@@ -43,11 +45,13 @@ namespace Youtube.Api.Controllers
             return _newChannelPresenter.ContentResult;
         }
 
-        [HttpPost("new-subscriber")]
-        public ActionResult Subscribe([FromBody] Models.Requests.NewSubscriberRequest request)
+        [Authorize]
+        [HttpPost("subscription")]
+        public ActionResult Subscribe([FromQuery] Models.Requests.SubscriptionProcessingRequest request)
         {
-            _newSubscriberUseCase.Handle(_mapper.Map<NewSubscriberRequest>(request), _newSubscriberPresenter);
-            return _newSubscriberPresenter.ContentResult;
+            var subscriptionProcessingRequest = new SubscriptionProcessingRequest(request.ChannelId, User.Id());
+            _subscriptionProcessingUseCase.Handle(subscriptionProcessingRequest, _subscriptionProcessingPresenter);
+            return _subscriptionProcessingPresenter.ContentResult;
         }
     }
 }

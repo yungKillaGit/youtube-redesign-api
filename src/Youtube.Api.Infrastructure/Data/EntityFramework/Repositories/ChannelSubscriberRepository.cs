@@ -20,25 +20,34 @@ namespace Youtube.Api.Infrastructure.Data.EntityFramework.Repositories
             _database = database;
         }
 
-        public bool CheckIfUserAlreadyChannelSubscriber(int userId, int channelId)
-        {
-            ChannelSubscriber channelSubscriber = _database.ChannelSubscribers.Where(x => x.UserId == userId && x.ChannelId == channelId).FirstOrDefault();
-            return channelSubscriber != null;
-        }
+        private ChannelSubscriber GetChannelSubscriber(int userId, int channelId)
+        {            
+            return _database.ChannelSubscribers.Where(x => x.UserId == userId && x.ChannelId == channelId).FirstOrDefault();
+        }        
 
-        public int Create(ChannelSubscriberDto subscriberInfo)
+        public int HandleSubscription(int userId, int channelId)
         {
-            var channelSubscriber = _mapper.Map<ChannelSubscriber>(subscriberInfo);
-            _database.ChannelSubscribers.Add(channelSubscriber);
-            _database.SaveChanges();
+            ChannelSubscriber subscriber = GetChannelSubscriber(userId, channelId);
+            int subscriberId = -1;
+            if (subscriber == null)
+            {
+                subscriber = new ChannelSubscriber()
+                {
+                    ChannelId = channelId,
+                    UserId = userId,
+                };
+                _database.ChannelSubscribers.Add(subscriber);
+                _database.SaveChanges();
+                subscriberId = subscriber.Id;
+            }
+            else
+            {
+                subscriberId = subscriber.Id;
+                _database.ChannelSubscribers.Remove(subscriber);
+                _database.SaveChanges();
+            }
 
-            return channelSubscriber.Id;
-        }
-
-        public UserDto FindChannelSubscriber(int userId)
-        {
-            User user = _database.ChannelSubscribers.Where(x => x.UserId == userId).Select(x => x.User).FirstOrDefault();
-            return _mapper.Map<UserDto>(user);
+            return subscriberId;
         }
     }
 }

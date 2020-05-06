@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace Youtube.Api.Models.Requests
 {
-    public class NewSubscriberRequest
+    public class SubscriptionProcessingRequest
     {
-        public int ChannelId { get; set; }
-        public int UserId { get; set; }
+        public int ChannelId { get; set; }        
     }
 }

@@ -8,16 +8,16 @@ using Youtube.Api.Serialization;
 
 namespace Youtube.Api.Presenters
 {
-    public class NewSubscriberPresenter : IOutputPort<NewSubscriberResponse>
+    public class SubscriptionProcessingPresenter : IOutputPort<SubscriptionProcessingResponse>
     {
         public JsonContentResult ContentResult { get; }
 
-        public NewSubscriberPresenter()
+        public SubscriptionProcessingPresenter()
         {
             ContentResult = new JsonContentResult();
         }
 
-        public void Handle(NewSubscriberResponse response)
+        public void Handle(SubscriptionProcessingResponse response)
         {
             ContentResult.StatusCode = response.Success ? 200 : response.Errors.First().Code;
             ContentResult.Content = JsonSerializer.SerializeObject(response);

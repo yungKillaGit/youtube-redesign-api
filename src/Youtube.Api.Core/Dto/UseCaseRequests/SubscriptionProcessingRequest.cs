@@ -6,12 +6,12 @@ using Youtube.Api.Core.Interfaces;
 
 namespace Youtube.Api.Core.Dto.UseCaseRequests
 {
-    public class NewSubscriberRequest : IUseCaseRequest<NewSubscriberResponse>
+    public class SubscriptionProcessingRequest : IUseCaseRequest<SubscriptionProcessingResponse>
     {
         public int ChannelId { get; }
         public int UserId { get; }
 
-        public NewSubscriberRequest(int channelId, int userId)
+        public SubscriptionProcessingRequest(int channelId, int userId)
         {
             ChannelId = channelId;
             UserId = userId;
