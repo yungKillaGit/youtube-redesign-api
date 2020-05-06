@@ -49,7 +49,7 @@ namespace Youtube.Api.Controllers
         [HttpPost("subscription")]
         public ActionResult Subscribe([FromQuery] Models.Requests.SubscriptionProcessingRequest request)
         {
-            var subscriptionProcessingRequest = new SubscriptionProcessingRequest(request.ChannelId, User.Id());
+            var subscriptionProcessingRequest = new SubscriptionProcessingRequest(request.ChannelId, int.Parse(User.Id()));
             _subscriptionProcessingUseCase.Handle(subscriptionProcessingRequest, _subscriptionProcessingPresenter);
             return _subscriptionProcessingPresenter.ContentResult;
         }

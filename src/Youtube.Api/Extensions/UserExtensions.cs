@@ -8,10 +8,10 @@ namespace Youtube.Api.Extensions
 {
     public static class UserExtensions
     {
-        public static int Id(this ClaimsPrincipal user)
+        public static string Id(this ClaimsPrincipal user)
         {
             var claimsIdentity = user.Identity as ClaimsIdentity;
-            return int.Parse(claimsIdentity.Claims.Single(c => c.Type == "id").Value);
+            return claimsIdentity.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
         }
     }
 }

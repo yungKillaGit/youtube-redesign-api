@@ -101,16 +101,6 @@ namespace Youtube.Api
 
 			builder.RegisterModule(new CoreModule());
 			builder.RegisterModule(new InfrastructureModule());
-
-			builder.RegisterType<SectionListPresenter>().SingleInstance();
-			builder.RegisterType<NewSectionPresenter>().SingleInstance();
-			builder.RegisterType<LoginPresenter>().SingleInstance();
-			builder.RegisterType<RegisterUserPresenter>().SingleInstance();
-			builder.RegisterType<NewCommentPresenter>().SingleInstance();
-			builder.RegisterType<SubscriptionProcessingPresenter>().SingleInstance();
-			builder.RegisterType<SearchPresenter>().SingleInstance();
-			builder.RegisterType<LikeProcessingPresenter>().SingleInstance();
-			builder.RegisterType<DislikeProcessingPresenter>().SingleInstance();
 			builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).Where(t => t.Name.EndsWith("Presenter")).SingleInstance();
 
 			builder.Populate(services);
