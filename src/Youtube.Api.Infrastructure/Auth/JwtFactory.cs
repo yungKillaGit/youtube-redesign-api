@@ -32,7 +32,7 @@ namespace Youtube.Api.Infrastructure.Auth
                  new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(_jwtOptions.IssuedAt).ToString(), ClaimValueTypes.Integer64),
                  identity.FindFirst(Constants.Strings.JwtClaimIdentifiers.Rol),
                  identity.FindFirst(Constants.Strings.JwtClaimIdentifiers.Id)
-             };
+            };
             
             var jwt = new JwtSecurityToken(
                 _jwtOptions.Issuer,

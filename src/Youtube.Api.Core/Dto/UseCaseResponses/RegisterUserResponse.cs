@@ -7,7 +7,7 @@ namespace Youtube.Api.Core.Dto.UseCaseResponses
 {
     public class RegisterUserResponse : UseCaseResponseMessage
     {
-        public int Id { get; }
+        public int? Id { get; }
         public IEnumerable<Error> Errors { get; }
 
         public RegisterUserResponse(int id, bool success = true, string message = null) : base(success, message)
