@@ -137,27 +137,36 @@ namespace Youtube.Api.Infrastructure.Data.EntityFramework.Repositories
             _database.SaveChanges();
         }
 
-        public void HandleView(int videoId, int userId)
+        public void HandleView(int videoId, int? userId)
         {
+            Video video = _database.Videos.Find(videoId);
+            if (userId == null)
+            {
+                video.Views++;
+                _database.Videos.Update(video);
+                _database.SaveChanges();
+
+                return;
+            }
+
             Section historySection = _database.Sections.Where(x => x.Name == _historySection).FirstOrDefault();
             if (historySection == null)
             {
                 throw new NotImplementedException("history section doesnt exist or section name is wrong");
             }
 
-            SectionedVideo userWatchedVideo = GetSectionedVideo(videoId, userId, historySection.Id);
+            SectionedVideo userWatchedVideo = GetSectionedVideo(videoId, (int)userId, historySection.Id);
             if (userWatchedVideo == null)
             {
                 userWatchedVideo = new SectionedVideo()
                 {
                     VideoId = videoId,
-                    UserId = userId,
+                    UserId = (int)userId,
                     SectionId = historySection.Id,
                 };
                 _database.SectionedVideos.Add(userWatchedVideo);
             }
-
-            Video video = _database.Videos.Find(videoId);
+            
             video.Views++;
             _database.Videos.Update(video);
 

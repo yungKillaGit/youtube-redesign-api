@@ -12,6 +12,6 @@ namespace Youtube.Api.Core.Interfaces.Gateways.Repositories
         int Create(VideoDto videoInfo);
         void HandleLike(int videoId, int userId);
         void HandleDislike(int videoId, int userId);
-        void HandleView(int videoId, int userId);
+        void HandleView(int videoId, int? userId);
     }
 }
