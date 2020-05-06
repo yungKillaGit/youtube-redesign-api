@@ -19,6 +19,7 @@ namespace Youtube.Api.Core
             builder.RegisterType<NewChannelUseCase>().As<INewChannelUseCase>().InstancePerLifetimeScope();
             builder.RegisterType<SubscriptionProcessingUseCase>().As<ISubscriptionProcessingUseCase>().InstancePerLifetimeScope();
             builder.RegisterType<SearchUseCase>().As<ISearchUseCase>().InstancePerLifetimeScope();
+            builder.RegisterType<LikeProcessingUseCase>().As<ILikeProcessingUseCase>().InstancePerLifetimeScope();
         }
     }
 }
