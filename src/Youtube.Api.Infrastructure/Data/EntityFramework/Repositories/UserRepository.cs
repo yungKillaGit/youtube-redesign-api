@@ -42,5 +42,19 @@ namespace Youtube.Api.Infrastructure.Data.EntityFramework.Repositories
         {
             return _mapper.Map<UserDto>(_database.Users.Find(id));
         }
+
+        public bool SetUserProfilePicture(int pictureId, int userId)
+        {
+            User user = _database.Users.Find(userId);
+            ProfilePicture picture = _database.ProfilePictures.Find(pictureId);
+            if (user == null || picture == null)
+            {
+                return false;
+            }
+            user.ProfilePictureId = pictureId;
+            _database.Users.Update(user);
+            _database.SaveChanges();
+            return true;
+        }
     }
 }

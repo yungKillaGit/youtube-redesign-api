@@ -6,7 +6,7 @@ using Youtube.Api.Core.Dto.UseCaseResponses;
 
 namespace Youtube.Api.Core.Interfaces.UseCases
 {
-    public interface IRegisterUserUseCase : IUseCaseRequestHandler<RegisterUserRequest, RegisterUserResponse>
+    public interface IRegisterUserUseCase : IAsyncUseCaseRequestHandler<RegisterUserRequest, RegisterUserResponse>
     {
     }
 }

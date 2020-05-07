@@ -11,5 +11,6 @@ namespace Youtube.Api.Core.Interfaces.Gateways.Repositories
         CreatedUserResponse Create(UserDto userInfo);
         UserDto FindByEmail(string email);
         UserDto FindById(int id);
+        bool SetUserProfilePicture(int pictureId, int userId);
     }
 }

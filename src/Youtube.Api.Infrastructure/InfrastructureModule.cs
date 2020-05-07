@@ -22,6 +22,7 @@ namespace Youtube.Api.Infrastructure
             builder.RegisterType<ChannelRepository>().As<IChannelRepository>().InstancePerLifetimeScope();
             builder.RegisterType<ChannelSubscriberRepository>().As<IChannelSubscriberRepository>().InstancePerLifetimeScope();
             builder.RegisterType<UploadedFileRepository>().As<IUploadedFileRepository>().InstancePerLifetimeScope();
+            builder.RegisterType<ProfilePictureRepository>().As<IProfilePictureRepository>().InstancePerLifetimeScope();
             builder.RegisterType<JwtFactory>().As<IJwtFactory>().SingleInstance();
             builder.RegisterType<UploadService>().As<IUploadService>().SingleInstance();
         }
