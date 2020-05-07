@@ -29,6 +29,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Youtube.Api.Infrastructure.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace Youtube.Api
 {
@@ -56,6 +58,18 @@ namespace Youtube.Api
 				options.Issuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)];
 				options.Audience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)];
 				options.SigningCredentials = new SigningCredentials(_signingKey, SecurityAlgorithms.HmacSha256);
+			});
+
+			services.Configure<KestrelServerOptions>(options =>
+			{
+				options.Limits.MaxRequestBodySize = int.MaxValue; // if don't set default value is: 30 MB
+			});
+
+			services.Configure<FormOptions>(x =>
+			{
+				x.ValueLengthLimit = int.MaxValue;
+				x.MultipartBodyLengthLimit = int.MaxValue; // if don't set default value is: 128 MB
+				x.MultipartHeadersLengthLimit = int.MaxValue;
 			});
 
 			var tokenValidationParameters = new TokenValidationParameters
@@ -117,6 +131,7 @@ namespace Youtube.Api
 			}
 			app.UseAuthentication();
 			app.UseAuthorization();
+			app.UseStaticFiles();
 			app.UseExceptionHandler(
 				builder =>
 				{

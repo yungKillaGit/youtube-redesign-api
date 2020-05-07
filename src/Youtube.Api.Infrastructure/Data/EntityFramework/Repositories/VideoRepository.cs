@@ -28,7 +28,10 @@ namespace Youtube.Api.Infrastructure.Data.EntityFramework.Repositories
 
         public int Create(VideoDto videoInfo)
         {
-            throw new NotImplementedException();
+            var video = _mapper.Map<Video>(videoInfo);
+            _database.Videos.Add(video);
+            _database.SaveChanges();
+            return video.Id;
         }
 
         public VideoDto FindById(int id)

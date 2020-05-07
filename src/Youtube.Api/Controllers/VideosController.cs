@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Youtube.Api.Core.Dto.UseCaseRequests;
@@ -23,6 +24,9 @@ namespace Youtube.Api.Controllers
         private readonly DislikeProcessingPresenter _dislikeProcessingPresenter;
         private readonly IViewProcessingUseCase _viewProcessingUseCase;
         private readonly ViewProcessingPresenter _viewProcessingPresenter;
+        private readonly INewVideoUseCase _newVideoUseCase;
+        private readonly NewVideoPresenter _newVideoPresenter;
+        private readonly IWebHostEnvironment _env;
 
         public VideosController(
             ILikeProcessingUseCase likeProcessingUseCase,
@@ -30,7 +34,10 @@ namespace Youtube.Api.Controllers
             IDislikeProcessingUseCase dislikeProcessingUseCase,
             DislikeProcessingPresenter dislikeProcessingPresenter,
             IViewProcessingUseCase viewProcessingUseCase,
-            ViewProcessingPresenter viewProcessingPresenter
+            ViewProcessingPresenter viewProcessingPresenter,
+            INewVideoUseCase newVideoUseCase,
+            NewVideoPresenter newVideoPresenter,
+            IWebHostEnvironment env
         )
         {
             _likeProcessingPresenter = likeProcessingPresenter;
@@ -39,6 +46,18 @@ namespace Youtube.Api.Controllers
             _dislikeProcessingUseCase = dislikeProcessingUseCase;
             _viewProcessingPresenter = viewProcessingPresenter;
             _viewProcessingUseCase = viewProcessingUseCase;
+            _newVideoUseCase = newVideoUseCase;
+            _newVideoPresenter = newVideoPresenter;
+            _env = env;
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<ActionResult> UploadVideo([FromForm] Models.Requests.NewVideoRequest request)
+        {
+            var newVideoRequest = new NewVideoRequest(request.VideoFile, request.Description, request.Name, int.Parse(User.Id()), _env.WebRootPath);
+            await _newVideoUseCase.Handle(newVideoRequest, _newVideoPresenter);
+            return _newVideoPresenter.ContentResult;
         }
 
 

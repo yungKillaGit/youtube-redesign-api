@@ -7,6 +7,7 @@ using Youtube.Api.Core.Interfaces.Services;
 using Youtube.Api.Infrastructure.Auth;
 using Youtube.Api.Infrastructure.Data;
 using Youtube.Api.Infrastructure.Data.EntityFramework.Repositories;
+using Youtube.Api.Infrastructure.Services;
 
 namespace Youtube.Api.Infrastructure
 {
@@ -20,7 +21,9 @@ namespace Youtube.Api.Infrastructure
             builder.RegisterType<CommentRepository>().As<ICommentRepository>().InstancePerLifetimeScope();
             builder.RegisterType<ChannelRepository>().As<IChannelRepository>().InstancePerLifetimeScope();
             builder.RegisterType<ChannelSubscriberRepository>().As<IChannelSubscriberRepository>().InstancePerLifetimeScope();
+            builder.RegisterType<UploadedFileRepository>().As<IUploadedFileRepository>().InstancePerLifetimeScope();
             builder.RegisterType<JwtFactory>().As<IJwtFactory>().SingleInstance();
+            builder.RegisterType<UploadService>().As<IUploadService>().SingleInstance();
         }
     }
 }

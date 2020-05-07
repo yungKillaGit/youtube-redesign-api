@@ -23,6 +23,7 @@ namespace Youtube.Api.Core
             builder.RegisterType<DislikeProcessingUseCase>().As<IDislikeProcessingUseCase>().InstancePerLifetimeScope();
             builder.RegisterType<ViewProcessingUseCase>().As<IViewProcessingUseCase>().InstancePerLifetimeScope();
             builder.RegisterType<SectionVideosUseCase>().As<ISectionVideosUseCase>().InstancePerLifetimeScope();
+            builder.RegisterType<NewVideoUseCase>().As<INewVideoUseCase>().InstancePerLifetimeScope();
         }
     }
 }

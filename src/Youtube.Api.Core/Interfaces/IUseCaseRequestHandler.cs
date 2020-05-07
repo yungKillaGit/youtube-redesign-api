@@ -10,6 +10,11 @@ namespace Youtube.Api.Core.Interfaces
         bool Handle(TUseCaseRequest useCaseRequest, IOutputPort<TUseCaseResponse> outputPort);
     }
 
+    public interface IAsyncUseCaseRequestHandler<in TUseCaseRequest, out TUseCaseResponse> where TUseCaseRequest : IUseCaseRequest<TUseCaseResponse>
+    {
+        Task<bool> Handle(TUseCaseRequest useCaseRequest, IOutputPort<TUseCaseResponse> outputPort);
+    }
+
     public interface IUseCaseRequestHandler<out TUseCaseResponse>
     {
         bool Handle(IOutputPort<TUseCaseResponse> outputPort);
