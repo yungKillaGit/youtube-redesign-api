@@ -22,29 +22,29 @@ namespace Youtube.Api.Core.UseCases
             _userRepository = userRepository;
         }
 
-        public bool Handle(NewChannelRequest useCaseRequest, IOutputPort<NewChannelResponse> outputPort)
+        public bool Handle(NewChannelRequest request, IOutputPort<NewChannelResponse> outputPort)
         {
-            if (_userRepository.FindById(useCaseRequest.UserId) == null)
+            if (_userRepository.FindById(request.UserId) == null)
             {
                 outputPort.Handle(new NewChannelResponse(new[] { new Error(404, "user not found") }));
                 return false;
             }
-            if (_channelRepository.FindByUserId(useCaseRequest.UserId) != null)
+            if (_channelRepository.FindByUserId(request.UserId) != null)
             {
                 outputPort.Handle(new NewChannelResponse(new[] { new Error(422, "user already have channel") }));
                 return false;
             }
-            if (_channelRepository.FindByName(useCaseRequest.Name) != null)
+            if (_channelRepository.FindByName(request.Name) != null)
             {
                 outputPort.Handle(new NewChannelResponse(new[] { new Error(422, "channel name is busy") }));
                 return false;
             }
             var channelInfo = new ChannelDto()
             {
-                UserId = useCaseRequest.UserId,
-                RegistrationDate = useCaseRequest.RegistrationDate,
-                Description = useCaseRequest.Description,
-                Name = useCaseRequest.Name,
+                UserId = request.UserId,
+                RegistrationDate = request.RegistrationDate,
+                Description = request.Description,
+                Name = request.Name,
             };
             int channelId = _channelRepository.Create(channelInfo);
             outputPort.Handle(new NewChannelResponse(channelId));

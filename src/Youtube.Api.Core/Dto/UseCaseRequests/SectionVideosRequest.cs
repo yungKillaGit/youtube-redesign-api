@@ -15,7 +15,7 @@ namespace Youtube.Api.Core.Dto.UseCaseRequests
         public SectionVideosRequest(int userId, string sectionName)
         {
             UserId = userId;
-            SectionName = Regex.Replace(sectionName, @"\s+", " ").ToLower();
+            SectionName = sectionName;
         }
     }
 }

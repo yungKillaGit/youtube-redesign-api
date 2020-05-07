@@ -8,7 +8,7 @@ namespace Youtube.Api.Core.Dto.UseCaseResponses
 {
     public class SectionVideosResponse : UseCaseResponseMessage
     {
-        public int SectionId { get; }
+        public int? SectionId { get; }
         public IEnumerable<VideoDto> Videos { get; }
         public IEnumerable<Error> Errors { get; }
 

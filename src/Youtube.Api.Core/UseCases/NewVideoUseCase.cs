@@ -36,25 +36,25 @@ namespace Youtube.Api.Core.UseCases
             _channelRepository = channelRepository;
         }
 
-        public async Task<bool> Handle(NewVideoRequest useCaseRequest, IOutputPort<NewVideoResponse> outputPort)
+        public async Task<bool> Handle(NewVideoRequest request, IOutputPort<NewVideoResponse> outputPort)
         {
-            if (_userRepository.FindById(useCaseRequest.UserId) == null)
+            if (_userRepository.FindById(request.UserId) == null)
             {
                 outputPort.Handle(new NewVideoResponse(new[] { new Error(404, "user not found") }));
                 return false;
             }
-            if (_channelRepository.FindByUserId(useCaseRequest.UserId) == null)
+            if (_channelRepository.FindByUserId(request.UserId) == null)
             {
                 outputPort.Handle(new NewVideoResponse(new[] { new Error(404, "you must have to create channel") }));
                 return false;
             }
-            UploadedFileDto uploadedFileInfo = await _uploadService.UploadFile(useCaseRequest.VideoFile, useCaseRequest.UserId, useCaseRequest.WebRootPath);
+            UploadedFileDto uploadedFileInfo = await _uploadService.UploadFile(request.VideoFile, request.UserId, request.WebRootPath);
             int fileId = _uploadedFileRepository.Create(uploadedFileInfo);
             var videoInfo = new VideoDto()
             {
                 Id = fileId,
-                Description = useCaseRequest.Description,
-                Name = useCaseRequest.Name,
+                Description = request.Description,
+                Name = request.Name,
                 Views = 0,
                 Likes = 0,
                 Dislikes = 0

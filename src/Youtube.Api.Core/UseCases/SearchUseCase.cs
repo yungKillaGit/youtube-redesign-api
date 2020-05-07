@@ -21,10 +21,10 @@ namespace Youtube.Api.Core.UseCases
             _channelRepository = channelRepository;
         }
 
-        public bool Handle(SearchRequest useCaseRequest, IOutputPort<SearchResponse> outputPort)
+        public bool Handle(SearchRequest request, IOutputPort<SearchResponse> outputPort)
         {
-            IEnumerable<VideoDto> videos = _videoRepository.FindByName(useCaseRequest.SearchQuery);
-            ChannelDto channel = _channelRepository.FindByName(useCaseRequest.SearchQuery);
+            IEnumerable<VideoDto> videos = _videoRepository.FindByName(request.SearchQuery);
+            ChannelDto channel = _channelRepository.FindByName(request.SearchQuery);
             outputPort.Handle(new SearchResponse(videos, channel));
 
             return true;

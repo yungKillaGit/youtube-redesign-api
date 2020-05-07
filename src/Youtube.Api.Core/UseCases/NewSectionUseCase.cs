@@ -18,9 +18,9 @@ namespace Youtube.Api.Core.UseCases
             _sectionRepository = sectionRepository;
         }
 
-        public bool Handle(NewSectionRequest useCaseRequest, IOutputPort<int> outputPort)
+        public bool Handle(NewSectionRequest request, IOutputPort<int> outputPort)
         {
-            int newSectionId = _sectionRepository.Create(new SectionDto() { Name = useCaseRequest.Name });
+            int newSectionId = _sectionRepository.Create(new SectionDto() { Name = request.Name });
             outputPort.Handle(newSectionId);
 
             return true;

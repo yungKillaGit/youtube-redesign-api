@@ -21,19 +21,19 @@ namespace Youtube.Api.Core.UseCases
             _videoRepository = videoRepository;
         }
 
-        public bool Handle(DislikeProcessingRequest useCaseRequest, IOutputPort<DislikeProcessingResponse> outputPort)
+        public bool Handle(DislikeProcessingRequest request, IOutputPort<DislikeProcessingResponse> outputPort)
         {
-            if (_userRepository.FindById(useCaseRequest.UserId) == null)
+            if (_userRepository.FindById(request.UserId) == null)
             {
                 outputPort.Handle(new DislikeProcessingResponse(new[] { new Error(404, "user not found") }));
                 return false;
             }
-            if (_videoRepository.FindById(useCaseRequest.VideoId) == null)
+            if (_videoRepository.FindById(request.VideoId) == null)
             {
                 outputPort.Handle(new DislikeProcessingResponse(new[] { new Error(404, "video not found") }));
                 return false;
             }
-            _videoRepository.HandleDislike(useCaseRequest.VideoId, useCaseRequest.UserId);
+            _videoRepository.HandleDislike(request.VideoId, request.UserId);
             outputPort.Handle(new DislikeProcessingResponse());
             return true;
         }

@@ -24,24 +24,24 @@ namespace Youtube.Api.Core.UseCases
             _userRepository = userRepository;
         }
 
-        public bool Handle(SubscriptionProcessingRequest useCaseRequest, IOutputPort<SubscriptionProcessingResponse> outputPort)
+        public bool Handle(SubscriptionProcessingRequest request, IOutputPort<SubscriptionProcessingResponse> outputPort)
         {
-            if (_userRepository.FindById(useCaseRequest.UserId) == null)
+            if (_userRepository.FindById(request.UserId) == null)
             {
                 outputPort.Handle(new SubscriptionProcessingResponse(new[] { new Error(404, "user not found") }));
                 return false;
             }
-            if (_channelRepository.FindById(useCaseRequest.ChannelId) == null)
+            if (_channelRepository.FindById(request.ChannelId) == null)
             {
                 outputPort.Handle(new SubscriptionProcessingResponse(new[] { new Error(404, "channel not found") }));
                 return false;
             }
-            if (_channelRepository.FindByUserId(useCaseRequest.UserId) != null)
+            if (_channelRepository.FindByUserId(request.UserId) != null)
             {
                 outputPort.Handle(new SubscriptionProcessingResponse(new[] { new Error(422, "you cannot subscribe to yourself") }));
                 return false;
             }
-            int channelSubscriberId = _channelSubscriberRepository.HandleSubscription(useCaseRequest.UserId, useCaseRequest.ChannelId);
+            int channelSubscriberId = _channelSubscriberRepository.HandleSubscription(request.UserId, request.ChannelId);
             outputPort.Handle(new SubscriptionProcessingResponse(channelSubscriberId));
             return true;
         }

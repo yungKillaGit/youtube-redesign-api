@@ -21,14 +21,14 @@ namespace Youtube.Api.Core.UseCases
             _userRepository = userRepository;
         }
 
-        public bool Handle(SectionVideosRequest useCaseRequest, IOutputPort<SectionVideosResponse> outputPort)
+        public bool Handle(SectionVideosRequest request, IOutputPort<SectionVideosResponse> outputPort)
         {
-            if (_userRepository.FindById(useCaseRequest.UserId) == null)
+            if (_userRepository.FindById(request.UserId) == null)
             {
                 outputPort.Handle(new SectionVideosResponse(new[] { new Error(404, "user not found") }));
                 return false;
             }
-            var response = _sectionRepository.GetSectionVideos(useCaseRequest.UserId, useCaseRequest.SectionName);
+            var response = _sectionRepository.GetSectionVideos(request.UserId, request.SectionName);
             outputPort.Handle(new SectionVideosResponse(response.SectionId, response.Videos));
             return true;
         }
