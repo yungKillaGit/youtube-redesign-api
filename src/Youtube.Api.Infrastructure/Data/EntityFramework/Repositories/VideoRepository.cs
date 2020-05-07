@@ -3,9 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Youtube.Api.Core.Dto.Entities;
 using Youtube.Api.Core.Interfaces.Gateways.Repositories;
 using Youtube.Api.Infrastructure.Data.Entities;
+using Youtube.Api.Infrastructure.Helpers;
 
 namespace Youtube.Api.Infrastructure.Data.EntityFramework.Repositories
 {
@@ -13,17 +15,11 @@ namespace Youtube.Api.Infrastructure.Data.EntityFramework.Repositories
     {
         private readonly IMapper _mapper;
         private readonly YoutubeContext _database;
-        private readonly string _likedSection;
-        private readonly string _dislikedSection;
-        private readonly string _historySection;
 
         public VideoRepository(IMapper mapper, YoutubeContext database)
         {
             _mapper = mapper;
             _database = database;
-            _likedSection = "Liked";
-            _dislikedSection = "Disliked";
-            _historySection = "History";
         }
 
         public int Create(VideoDto videoInfo)
@@ -41,13 +37,14 @@ namespace Youtube.Api.Infrastructure.Data.EntityFramework.Repositories
 
         public IEnumerable<VideoDto> FindByName(string name)
         {
-            return _mapper.Map<IEnumerable<VideoDto>>(_database.Videos.Where(x => x.Name.ToLower() == name).ToList());
+            var videos = _database.Videos.Where(x => Regex.Replace(x.Name, @"\s+", " ").ToLower() == name).ToList();
+            return _mapper.Map<IEnumerable<VideoDto>>(videos);
         }
 
         public void HandleDislike(int videoId, int userId)
         {
-            Section likedSection = _database.Sections.Where(x => x.Name == _likedSection).FirstOrDefault();
-            Section dislikedSection = _database.Sections.Where(x => x.Name == _dislikedSection).FirstOrDefault();
+            Section likedSection = _database.Sections.Where(x => x.Name == Constants.Strings.Sections.Liked).FirstOrDefault();
+            Section dislikedSection = _database.Sections.Where(x => x.Name == Constants.Strings.Sections.Disliked).FirstOrDefault();
             if (likedSection == null)
             {
                 throw new NotImplementedException("liked section doesnt exist or section name is wrong");
@@ -94,8 +91,8 @@ namespace Youtube.Api.Infrastructure.Data.EntityFramework.Repositories
 
         public void HandleLike(int videoId, int userId)
         {
-            Section likedSection = _database.Sections.Where(x => x.Name == _likedSection).FirstOrDefault();
-            Section dislikedSection = _database.Sections.Where(x => x.Name == _dislikedSection).FirstOrDefault();
+            Section likedSection = _database.Sections.Where(x => x.Name == Constants.Strings.Sections.Liked).FirstOrDefault();
+            Section dislikedSection = _database.Sections.Where(x => x.Name == Constants.Strings.Sections.Disliked).FirstOrDefault();
             if (likedSection == null)
             {
                 throw new NotImplementedException("liked section doesnt exist or section name is wrong");
@@ -152,7 +149,7 @@ namespace Youtube.Api.Infrastructure.Data.EntityFramework.Repositories
                 return;
             }
 
-            Section historySection = _database.Sections.Where(x => x.Name == _historySection).FirstOrDefault();
+            Section historySection = _database.Sections.Where(x => x.Name == Constants.Strings.Sections.History).FirstOrDefault();
             if (historySection == null)
             {
                 throw new NotImplementedException("history section doesnt exist or section name is wrong");

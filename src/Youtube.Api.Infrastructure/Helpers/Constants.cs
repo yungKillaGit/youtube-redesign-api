@@ -17,6 +17,13 @@ namespace Youtube.Api.Infrastructure.Helpers
             {
                 public const string ApiAccess = "api_access";
             }
+
+            public static class Sections
+            {
+                public const string Liked = "Liked";
+                public const string History = "History";
+                public const string Disliked = "Disliked";
+            }
         }
     }
 }

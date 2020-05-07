@@ -8,6 +8,7 @@ using Youtube.Api.Core.Dto.Entities;
 using Youtube.Api.Core.Dto.GatewayResponses.Repositories;
 using Youtube.Api.Core.Interfaces.Gateways.Repositories;
 using Youtube.Api.Infrastructure.Data.Entities;
+using Youtube.Api.Infrastructure.Helpers;
 
 namespace Youtube.Api.Infrastructure.Data.EntityFramework.Repositories
 {
@@ -37,11 +38,11 @@ namespace Youtube.Api.Infrastructure.Data.EntityFramework.Repositories
         }
 
         public SectionVideosResponse GetSectionVideos(int userId, string sectionName)
-        {
+        {            
             Section section = _database.Sections.Where(x => x.Name.ToLower() == sectionName).FirstOrDefault();
             if (section == null)
             {
-                throw new NotImplementedException($"{sectionName} section doesnt exist or section name is wrong");
+                throw new NotImplementedException($"{sectionName} section doesnt exist");
             }
             IEnumerable<Video> videos = _database
                 .SectionedVideos
