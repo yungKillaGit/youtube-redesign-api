@@ -116,6 +116,7 @@ namespace Youtube.Api
 			builder.RegisterModule(new CoreModule());
 			builder.RegisterModule(new InfrastructureModule());
 			builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).Where(t => t.Name.EndsWith("Presenter")).SingleInstance();
+			builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).Where(t => t.Name.EndsWith("Validator")).SingleInstance();
 
 			builder.Populate(services);
 
