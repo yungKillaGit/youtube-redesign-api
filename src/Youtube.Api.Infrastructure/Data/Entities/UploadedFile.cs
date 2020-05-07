@@ -7,8 +7,7 @@ namespace Youtube.Api.Infrastructure.Data.Entities
     {
         public int Id { get; set; }
         public string FileName { get; set; }
-        public string RelativePath { get; set; }
-        public string FileExtension { get; set; }
+        public string RelativePath { get; set; }        
         public DateTime UploadDate { get; set; }
         public int UserId { get; set; }
 

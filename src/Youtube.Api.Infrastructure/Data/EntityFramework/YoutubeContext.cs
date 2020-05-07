@@ -207,11 +207,7 @@ namespace Youtube.Api.Infrastructure.Data
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
-                    .UseIdentityAlwaysColumn();
-
-                entity.Property(e => e.FileExtension)
-                    .IsRequired()
-                    .HasColumnName("fileExtension");
+                    .UseIdentityAlwaysColumn();                
 
                 entity.Property(e => e.FileName)
                     .IsRequired()
