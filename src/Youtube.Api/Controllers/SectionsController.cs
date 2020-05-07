@@ -8,47 +8,47 @@ using Youtube.Api.Core.Interfaces.UseCases;
 using Youtube.Api.Presenters;
 using Youtube.Api.Core.Dto.UseCaseRequests;
 using Microsoft.AspNetCore.Authorization;
+using Youtube.Api.Extensions;
+using Youtube.Api.Infrastructure.Helpers;
+using System.Text.RegularExpressions;
 
 namespace Youtube.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class SectionsController : ControllerBase
-    {
-        private readonly SectionListPresenter _allSectionsPresenter;
-        private readonly NewSectionPresenter _newSectionPresenter;
-        private readonly ISectionListUseCase _getSectionsUseCase;
-        private readonly INewSectionUseCase _newSectionUseCase;
+    {        
+        private readonly ISectionVideosUseCase _sectionVideosUseCase;
+        private readonly SectionVideosPresenter _sectionVideosPresenter;
 
         public SectionsController
-        (
-            SectionListPresenter allSectionsPresenter,
-            NewSectionPresenter newSectionPresenter,
-            ISectionListUseCase getSectionsUseCase,
-            INewSectionUseCase newSectionUseCase
+        (            
+            ISectionVideosUseCase sectionVideosUseCase,
+            SectionVideosPresenter sectionVideosPresenter
         )
-        {
-            _allSectionsPresenter = allSectionsPresenter;
-            _newSectionPresenter = newSectionPresenter;
-            _getSectionsUseCase = getSectionsUseCase;
-            _newSectionUseCase = newSectionUseCase;
+        {            
+            _sectionVideosPresenter = sectionVideosPresenter;
+            _sectionVideosUseCase = sectionVideosUseCase;
         }
 
         [Authorize]
-        [HttpGet]
-        public ActionResult GetSections()
+        [HttpGet("videos")]
+        public ActionResult GetSectionVideos([FromQuery] Models.Requests.SectionVideosRequest request)
         {
-            _getSectionsUseCase.Handle(_allSectionsPresenter);
-
-            return _allSectionsPresenter.ContentResult;
-        }
-
-        [HttpPost]
-        public ActionResult CreateSection([FromBody] Models.Requests.NewSectionRequest request)
-        {
-            _newSectionUseCase.Handle(new NewSectionRequest(request.Name), _newSectionPresenter);
-
-            return _newSectionPresenter.ContentResult;
+            var allowedSections = new List<string>
+            {
+                Constants.Strings.Sections.Disliked,
+                Constants.Strings.Sections.Liked,
+                Constants.Strings.Sections.History,
+            };
+            allowedSections.ForEach(x => x.ToLower());
+            string sectionName = Regex.Replace(request.SectionName, @"\s+", " ").ToLower();
+            if (!allowedSections.Contains(sectionName))
+            {
+                return BadRequest(new { Error = "required section is not alloweed or its name is wrong" });
+            }
+            _sectionVideosUseCase.Handle(new SectionVideosRequest(int.Parse(User.Id()), sectionName), _sectionVideosPresenter);
+            return _sectionVideosPresenter.ContentResult;
         }
     }
 }

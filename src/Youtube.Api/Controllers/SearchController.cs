@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -16,20 +17,22 @@ namespace Youtube.Api.Controllers
     public class SearchController : ControllerBase
     {
         private readonly ISearchUseCase _searchUseCase;
-        private readonly SearchPresenter _searchPresenter;
-        private readonly IMapper _mapper;
+        private readonly SearchPresenter _searchPresenter;        
 
-        public SearchController(ISearchUseCase searchUseCase, SearchPresenter searchPresenter, IMapper mapper)
+        public SearchController(ISearchUseCase searchUseCase, SearchPresenter searchPresenter)
         {
             _searchUseCase = searchUseCase;
             _searchPresenter = searchPresenter;
-            _mapper = mapper;
         }
 
         [HttpGet]
         public ActionResult Search([FromQuery] Models.Requests.SearchRequest request)
         {
-            _searchUseCase.Handle(_mapper.Map<SearchRequest>(request), _searchPresenter);
+            if (String.IsNullOrEmpty(request.SearchQuery))
+            {
+                return BadRequest(new { error = "search query must be non-empty string" });
+            }
+            _searchUseCase.Handle(new SearchRequest(Regex.Replace(request.SearchQuery, @"\s+", " ").ToLower()), _searchPresenter);
             return _searchPresenter.ContentResult;
         }
     }
