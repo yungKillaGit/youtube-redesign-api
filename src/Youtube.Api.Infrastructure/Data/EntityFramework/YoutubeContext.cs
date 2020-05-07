@@ -56,7 +56,6 @@ namespace Youtube.Api.Infrastructure.Data
                 entity.HasOne(d => d.Channel)
                     .WithMany(p => p.ChannelSubscribers)
                     .HasForeignKey(d => d.ChannelId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("channelSubscribers_channelId_fkey");
 
                 entity.HasOne(d => d.User)
@@ -70,12 +69,12 @@ namespace Youtube.Api.Infrastructure.Data
             {
                 entity.ToTable("channels");
 
-                entity.HasIndex(e => e.UserId)
-                    .HasName("channels_userId_key")
-                    .IsUnique();
-
                 entity.HasIndex(e => e.Name)
                     .HasName("channels_name_key")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.UserId)
+                    .HasName("channels_userId_key")
                     .IsUnique();
 
                 entity.Property(e => e.Id)
@@ -84,13 +83,13 @@ namespace Youtube.Api.Infrastructure.Data
 
                 entity.Property(e => e.Description).HasColumnName("description");
 
-                entity.Property(e => e.RegistrationDate)
-                    .HasColumnName("registrationDate")
-                    .HasColumnType("date");
-
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnName("name");
+
+                entity.Property(e => e.RegistrationDate)
+                    .HasColumnName("registrationDate")
+                    .HasColumnType("date");
 
                 entity.Property(e => e.UserId).HasColumnName("userId");
 
@@ -128,7 +127,6 @@ namespace Youtube.Api.Infrastructure.Data
                 entity.HasOne(d => d.Video)
                     .WithMany(p => p.Comments)
                     .HasForeignKey(d => d.VideoId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("comments_videoId_fkey");
             });
 
@@ -143,7 +141,6 @@ namespace Youtube.Api.Infrastructure.Data
                 entity.HasOne(d => d.IdNavigation)
                     .WithOne(p => p.ProfilePictures)
                     .HasForeignKey<ProfilePicture>(d => d.Id)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("profilePictures_id_fkey");
             });
 
@@ -180,7 +177,6 @@ namespace Youtube.Api.Infrastructure.Data
                 entity.HasOne(d => d.Video)
                     .WithMany(p => p.SectionedVideos)
                     .HasForeignKey(d => d.VideoId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("sectionedVideos_videoId_fkey");
             });
 
@@ -207,7 +203,7 @@ namespace Youtube.Api.Infrastructure.Data
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
-                    .UseIdentityAlwaysColumn();                
+                    .UseIdentityAlwaysColumn();
 
                 entity.Property(e => e.FileName)
                     .IsRequired()
@@ -224,7 +220,7 @@ namespace Youtube.Api.Infrastructure.Data
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.UploadedFiles)
                     .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.SetNull)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("uploadedFiles_userId_fkey");
             });
 
@@ -235,9 +231,6 @@ namespace Youtube.Api.Infrastructure.Data
                 entity.HasIndex(e => e.Email)
                     .HasName("users_email_key")
                     .IsUnique();
-
-                entity.HasIndex(e => e.PasswordHash)
-                    .HasName("users_passwordHash_key");                    
 
                 entity.HasIndex(e => e.ProfilePictureId)
                     .HasName("users_profilePictureId_key")
@@ -268,6 +261,7 @@ namespace Youtube.Api.Infrastructure.Data
                 entity.HasOne(d => d.ProfilePicture)
                     .WithOne(p => p.Users)
                     .HasForeignKey<User>(d => d.ProfilePictureId)
+                    .OnDelete(DeleteBehavior.SetNull)
                     .HasConstraintName("users_profilePictureId_fkey");
             });
 
@@ -279,13 +273,15 @@ namespace Youtube.Api.Infrastructure.Data
                     .HasColumnName("id")
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.Name).IsRequired().HasColumnName("name");
-
                 entity.Property(e => e.Description).HasColumnName("description");
 
                 entity.Property(e => e.Dislikes).HasColumnName("dislikes");
 
                 entity.Property(e => e.Likes).HasColumnName("likes");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name");
 
                 entity.Property(e => e.Views).HasColumnName("views");
 
