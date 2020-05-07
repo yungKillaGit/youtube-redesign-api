@@ -3,6 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+src/Youtube.Api/wwwroot/pictures
+src/Youtube.Api/wwwroot/videos
+
 # User-specific files
 *.rsuser
 *.suo
