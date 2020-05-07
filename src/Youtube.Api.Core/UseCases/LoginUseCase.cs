@@ -23,19 +23,16 @@ namespace Youtube.Api.Core.UseCases
             _jwtFactory = jwtFactory;
         }
 
-        public bool Handle(LoginRequest useCaseRequest, IOutputPort<LoginResponse> outputPort)
+        public bool Handle(LoginRequest request, IOutputPort<LoginResponse> outputPort)
         {
-            if (!string.IsNullOrEmpty(useCaseRequest.Email) && !string.IsNullOrEmpty(useCaseRequest.PasswordHash))
+            UserDto user = _userRepository.FindByEmail(request.Email);
+            if (user != null)
             {
-                UserDto user = _userRepository.FindByEmail(useCaseRequest.Email);
-                if (user != null)
+                if (user.PasswordHash == request.PasswordHash)
                 {
-                    if (user.PasswordHash == useCaseRequest.PasswordHash)
-                    {
-                        Token token = _jwtFactory.GenerateEncodedToken(user.Id, user.Email);
-                        outputPort.Handle(new LoginResponse(token));
-                        return true;
-                    }
+                    Token token = _jwtFactory.GenerateEncodedToken(user.Id, user.Email);
+                    outputPort.Handle(new LoginResponse(token));
+                    return true;
                 }
             }
             outputPort.Handle(new LoginResponse(new[] { new Error(422, "invalid username or password") }));
