@@ -23,6 +23,7 @@ namespace Youtube.Api.Infrastructure.Helpers
                 public const string Liked = "Liked";
                 public const string History = "History";
                 public const string Disliked = "Disliked";
+                public const string PendingVideos = "Pending";
             }
         }
     }

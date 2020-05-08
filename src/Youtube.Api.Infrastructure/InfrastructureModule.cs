@@ -25,6 +25,7 @@ namespace Youtube.Api.Infrastructure
             builder.RegisterType<ProfilePictureRepository>().As<IProfilePictureRepository>().InstancePerLifetimeScope();
             builder.RegisterType<JwtFactory>().As<IJwtFactory>().SingleInstance();
             builder.RegisterType<UploadService>().As<IUploadService>().SingleInstance();
+            builder.RegisterType<Seeder>().AsSelf().SingleInstance();
         }
     }
 }

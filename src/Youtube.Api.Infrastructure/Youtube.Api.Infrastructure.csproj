@@ -25,4 +25,8 @@
     <ProjectReference Include="..\Youtube.Api.Core\Youtube.Api.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>
