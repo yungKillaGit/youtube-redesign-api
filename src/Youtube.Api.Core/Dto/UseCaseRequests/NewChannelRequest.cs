@@ -18,6 +18,7 @@ namespace Youtube.Api.Core.Dto.UseCaseRequests
             UserId = userId;
             RegistrationDate = registrationDate;
             Description = description;
+            Name = name;
         }
     }
 }

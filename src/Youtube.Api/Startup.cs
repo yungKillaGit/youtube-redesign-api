@@ -31,6 +31,7 @@ using Youtube.Api.Infrastructure.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.Http.Features;
+using Youtube.Api.Infrastructure.Data.EntityFramework;
 
 namespace Youtube.Api
 {
@@ -48,7 +49,8 @@ namespace Youtube.Api
 
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public IServiceProvider ConfigureServices(IServiceCollection services)
-		{			
+		{
+			services.AddCors();			
 			services.AddDbContext<YoutubeContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Default")));
 			
 			var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtIssuerOptions));
@@ -130,6 +132,7 @@ namespace Youtube.Api
 			{
 				app.UseDeveloperExceptionPage();
 			}
+			app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 			app.UseAuthentication();
 			app.UseAuthorization();
 			app.UseStaticFiles();

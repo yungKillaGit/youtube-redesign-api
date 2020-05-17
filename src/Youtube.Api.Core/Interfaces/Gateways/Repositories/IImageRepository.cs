@@ -5,8 +5,9 @@ using Youtube.Api.Core.Dto.Entities;
 
 namespace Youtube.Api.Core.Interfaces.Gateways.Repositories
 {
-    public interface IProfilePictureRepository
+    public interface IImageRepository
     {
-        int Create(ProfilePictureDto pictureInfo);
+        ImageDto Create(ImageDto pictureInfo, string webRootPath, UploadedFileDto uploadedImage);
+        ImageDto Get(int imageId);
     }
 }

@@ -6,6 +6,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Youtube.Api.Core.Dto;
+using Youtube.Api.Core.Dto.Entities;
 using Youtube.Api.Core.Interfaces.Services;
 using Youtube.Api.Infrastructure.Helpers;
 
@@ -21,17 +22,18 @@ namespace Youtube.Api.Infrastructure.Auth
             ThrowIfInvalidOptions(_jwtOptions);
         }
 
-        public Token GenerateEncodedToken(int id, string email)
+        public Token GenerateEncodedToken(UserDto user)
         {
-            var identity = GenerateClaimsIdentity($"{id}", email);
+            var identity = GenerateClaimsIdentity($"{user.Id}", user.Email, user.Name);
 
             var claims = new[]
-            {
-                 new Claim(JwtRegisteredClaimNames.Sub, email),
+            {                 
+                 new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                  new Claim(JwtRegisteredClaimNames.Jti, _jwtOptions.GenerateJti()),
                  new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(_jwtOptions.IssuedAt).ToString(), ClaimValueTypes.Integer64),
                  identity.FindFirst(Constants.Strings.JwtClaimIdentifiers.Rol),
-                 identity.FindFirst(Constants.Strings.JwtClaimIdentifiers.Id)
+                 identity.FindFirst(Constants.Strings.JwtClaimIdentifiers.Id),
+                 identity.FindFirst(Constants.Strings.JwtClaimIdentifiers.UserName),
             };
             
             var jwt = new JwtSecurityToken(
@@ -46,10 +48,11 @@ namespace Youtube.Api.Infrastructure.Auth
             return new Token(identity.Claims.Single(c => c.Type == "id").Value, encodedJwt, (int)_jwtOptions.ValidFor.TotalSeconds);
         }
 
-        private static ClaimsIdentity GenerateClaimsIdentity(string id, string email)
+        private static ClaimsIdentity GenerateClaimsIdentity(string id, string email, string userName)
         {
             return new ClaimsIdentity(new GenericIdentity(email, "Token"), new[]
             {
+                new Claim(Constants.Strings.JwtClaimIdentifiers.UserName, userName),
                 new Claim(Constants.Strings.JwtClaimIdentifiers.Id, id),
                 new Claim(Constants.Strings.JwtClaimIdentifiers.Rol, Constants.Strings.JwtClaims.ApiAccess)
             });

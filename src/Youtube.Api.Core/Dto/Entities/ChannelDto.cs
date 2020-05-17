@@ -15,8 +15,7 @@ namespace Youtube.Api.Core.Dto.Entities
         public DateTime RegistrationDate { get; set; }
         public string Description { get; set; }
         public string Name { get; set; }
-
-        public UserDto User { get; set; }
+        
         public ICollection<ChannelSubscriberDto> ChannelSubscribers { get; set; }
     }
 }

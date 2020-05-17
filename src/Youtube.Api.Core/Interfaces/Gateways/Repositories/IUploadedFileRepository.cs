@@ -7,6 +7,7 @@ namespace Youtube.Api.Core.Interfaces.Gateways.Repositories
 {
     public interface IUploadedFileRepository
     {
-        int Create(UploadedFileDto uploadedFileInfo);
+        UploadedFileDto Create(UploadedFileDto uploadedFileInfo);
+        UploadedFileDto Get(int id);
     }
 }

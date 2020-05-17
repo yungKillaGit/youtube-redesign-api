@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Http.Cors;
 using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Hosting;
@@ -14,7 +15,7 @@ using Youtube.Api.Presenters;
 using Youtube.Api.Validators;
 
 namespace Youtube.Api.Controllers
-{
+{    
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
@@ -82,6 +83,7 @@ namespace Youtube.Api.Controllers
                 request.Picture,
                 _env.WebRootPath
             );
+            var files = Request.Form.Files;
             await _registerUserUseCase.Handle(registerUserRequest, _registerUserPresenter);
 
             return _registerUserPresenter.ContentResult;

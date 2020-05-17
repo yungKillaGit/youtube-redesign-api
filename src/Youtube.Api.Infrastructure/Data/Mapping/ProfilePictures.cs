@@ -11,7 +11,7 @@ namespace Youtube.Api.Infrastructure.Data.Mapping
     {
         public ProfilePictures()
         {
-            CreateMap<ProfilePicture, ProfilePictureDto>().ReverseMap();
+            CreateMap<Image, ImageDto>().ReverseMap();
         }
     }
 }

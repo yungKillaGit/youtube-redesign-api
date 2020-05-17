@@ -12,7 +12,7 @@ namespace Youtube.Api.Validators
         public LoginValidator()
         {
             RuleFor(x => x.Email).NotEmpty().EmailAddress();
-            RuleFor(x => x.Password).NotEmpty().NotEqual(x => x.Email);
+            RuleFor(x => x.Password).NotEmpty();
         }
     }
 }

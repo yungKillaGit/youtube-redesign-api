@@ -7,8 +7,7 @@ namespace Youtube.Api.Core.Dto.Entities
     {
         public VideoDto()
         {
-            Comments = new HashSet<CommentDto>();
-            SectionedVideos = new HashSet<SectionedVideoDto>();
+            Comments = new HashSet<CommentDto>();            
         }
 
         public int Id { get; set; }
@@ -17,9 +16,12 @@ namespace Youtube.Api.Core.Dto.Entities
         public int Dislikes { get; set; }
         public string Description { get; set; }
         public string Name { get; set; }
+        public int UploadedFileId { get; set; }
+        public int UserId { get; set; }
+        public int PreviewImageId { get; set; }
 
-        public UploadedFileDto IdNavigation { get; set; }
-        public ICollection<CommentDto> Comments { get; set; }
-        public ICollection<SectionedVideoDto> SectionedVideos { get; set; }
+        public virtual ImageDto PreviewImage { get; set; }        
+        public virtual UserDto User { get; set; }
+        public virtual ICollection<CommentDto> Comments { get; set; }        
     }
 }

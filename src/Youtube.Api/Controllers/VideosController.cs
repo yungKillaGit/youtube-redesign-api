@@ -30,6 +30,8 @@ namespace Youtube.Api.Controllers
         private readonly NewVideoPresenter _newVideoPresenter;
         private readonly IWebHostEnvironment _env;
         private readonly NewVideoValidator _newVideoValidator;
+        private readonly IAllVideosUseCase _allVideosUseCase;
+        private readonly AllVideosPresenter _allVideosPresenter;
 
         public VideosController(
             ILikeProcessingUseCase likeProcessingUseCase,
@@ -41,7 +43,9 @@ namespace Youtube.Api.Controllers
             INewVideoUseCase newVideoUseCase,
             NewVideoPresenter newVideoPresenter,
             IWebHostEnvironment env,
-            NewVideoValidator newVideoValidator
+            NewVideoValidator newVideoValidator,
+            IAllVideosUseCase allVideosUseCase,
+            AllVideosPresenter allVideosPresenter
         )
         {
             _likeProcessingPresenter = likeProcessingPresenter;
@@ -54,6 +58,8 @@ namespace Youtube.Api.Controllers
             _newVideoPresenter = newVideoPresenter;
             _env = env;
             _newVideoValidator = newVideoValidator;
+            _allVideosPresenter = allVideosPresenter;
+            _allVideosUseCase = allVideosUseCase;
         }
 
         [Authorize]
@@ -68,7 +74,7 @@ namespace Youtube.Api.Controllers
             {
                 return BadRequest(e.Errors);
             }
-            var newVideoRequest = new NewVideoRequest(request.VideoFile, request.Description, request.Name, int.Parse(User.Id()), _env.WebRootPath);
+            var newVideoRequest = new NewVideoRequest(request.VideoFile, request.VideoPreview, request.Description, request.Name, int.Parse(User.Id()), _env.WebRootPath);
             await _newVideoUseCase.Handle(newVideoRequest, _newVideoPresenter);
             return _newVideoPresenter.ContentResult;
         }
@@ -104,6 +110,13 @@ namespace Youtube.Api.Controllers
             var viewProcessingRequest = new ViewProcessingRequest(userId, request.VideoId);
             _viewProcessingUseCase.Handle(viewProcessingRequest, _viewProcessingPresenter);
             return _viewProcessingPresenter.ContentResult;
+        }
+
+        [HttpGet]
+        public ActionResult GetAllVideos()
+        {
+            _allVideosUseCase.Handle(_allVideosPresenter);
+            return _allVideosPresenter.ContentResult;
         }
     }
 }

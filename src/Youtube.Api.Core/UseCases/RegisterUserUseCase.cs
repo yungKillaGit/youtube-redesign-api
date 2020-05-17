@@ -19,19 +19,19 @@ namespace Youtube.Api.Core.UseCases
         private readonly IUserRepository _userRepository;
         private readonly IUploadedFileRepository _uploadedFileRepository;
         private readonly IUploadService _uploadService;
-        private readonly IProfilePictureRepository _profilePictureRepository;
+        private readonly IImageRepository _imageRepository;
 
         public RegisterUserUseCase(
             IUserRepository userRepository,
             IUploadedFileRepository uploadedFileRepository,
             IUploadService uploadService,
-            IProfilePictureRepository profilePictureRepository
+            IImageRepository imageRepository
         )
         {
             _userRepository = userRepository;
             _uploadedFileRepository = uploadedFileRepository;
             _uploadService = uploadService;
-            _profilePictureRepository = profilePictureRepository;
+            _imageRepository = imageRepository;
         } 
 
         public async Task<bool> Handle(RegisterUserRequest request, IOutputPort<RegisterUserResponse> outputPort)
@@ -46,17 +46,19 @@ namespace Youtube.Api.Core.UseCases
                 Name = request.Name,
                 Email = request.Email,
                 BirthDay = request.BirthDay,
-                PasswordHash = request.PasswordHash,
-                ProfilePictureId = null,
-            };
-            CreatedUserResponse response = _userRepository.Create(userInfo);
+                PasswordHash = request.PasswordHash,                
+            };            
+            UserDto createdUser = _userRepository.Create(userInfo);
             if (request.Picture != null)
             {
-                var uploadedPicture = await _uploadService.UploadFile(request.Picture, response.Id, request.WebRootPath);
-                int pictureId = _uploadedFileRepository.Create(uploadedPicture);
-                _userRepository.SetUserProfilePicture(pictureId, response.Id);
+                var uploadedPicture = await _uploadService.UploadFile(request.Picture, request.WebRootPath);
+                UploadedFileDto uploadedFile = _uploadedFileRepository.Create(uploadedPicture);
+                uploadedPicture.Id = uploadedFile.Id;
+
+                ImageDto createdPicture = _imageRepository.Create(new ImageDto() { UserId = createdUser.Id }, request.WebRootPath, uploadedPicture);
+                createdUser = _userRepository.SetUserProfilePicture(createdPicture.Id, createdUser.Id);
             }
-            outputPort.Handle(new RegisterUserResponse(response.Id));
+            outputPort.Handle(new RegisterUserResponse(createdUser));
             return true;
         }
     }

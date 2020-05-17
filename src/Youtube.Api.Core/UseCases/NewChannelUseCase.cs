@@ -23,7 +23,7 @@ namespace Youtube.Api.Core.UseCases
         }
 
         public bool Handle(NewChannelRequest request, IOutputPort<NewChannelResponse> outputPort)
-        {
+        {            
             if (_userRepository.FindById(request.UserId) == null)
             {
                 outputPort.Handle(new NewChannelResponse(new[] { new Error(404, "user not found") }));
@@ -46,8 +46,8 @@ namespace Youtube.Api.Core.UseCases
                 Description = request.Description,
                 Name = request.Name,
             };
-            int channelId = _channelRepository.Create(channelInfo);
-            outputPort.Handle(new NewChannelResponse(channelId));
+            ChannelDto createdChannel = _channelRepository.Create(channelInfo);
+            outputPort.Handle(new NewChannelResponse(createdChannel));
             return true;
         }
     }

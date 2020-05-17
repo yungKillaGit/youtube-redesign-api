@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Youtube.Api.Core.Dto.Entities;
 using Youtube.Api.Core.Interfaces;
 
 namespace Youtube.Api.Core.Dto.UseCaseResponses
 {
     public class RegisterUserResponse : UseCaseResponseMessage
     {
-        public int? Id { get; }
+        public UserDto User { get; }
         public IEnumerable<Error> Errors { get; }
 
-        public RegisterUserResponse(int id, bool success = true, string message = null) : base(success, message)
+        public RegisterUserResponse(UserDto user, bool success = true, string message = null) : base(success, message)
         {
-            Id = id;
+            User = user;
         }
 
         public RegisterUserResponse(IEnumerable<Error> errors, bool success = false, string message = null) : base(success, message)

@@ -19,12 +19,17 @@ namespace Youtube.Api.Infrastructure.Data.EntityFramework.Repositories
             _database = database;
         }
 
-        public int Create(UploadedFileDto uploadedFileInfo)
+        public UploadedFileDto Create(UploadedFileDto uploadedFileInfo)
         {
             var file = _mapper.Map<UploadedFile>(uploadedFileInfo);
             _database.UploadedFiles.Add(file);
             _database.SaveChanges();
-            return file.Id;
+            return _mapper.Map<UploadedFileDto>(file);
+        }
+
+        public UploadedFileDto Get(int id)
+        {
+            return _mapper.Map<UploadedFileDto>(_database.UploadedFiles.Find(id));
         }
     }
 }

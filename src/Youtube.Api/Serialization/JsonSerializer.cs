@@ -12,6 +12,7 @@ namespace Youtube.Api.Serialization
         private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {
             ContractResolver = new JsonContractResolver(),
+            ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore,
             NullValueHandling = NullValueHandling.Ignore
         };
 

@@ -11,8 +11,7 @@ namespace Youtube.Api.Validators
     {
         public NewChannelValidator()
         {
-            RuleFor(x => x.Name).NotEmpty().Length(3, 10);
-            RuleFor(x => x.RegistrationDate).NotEmpty();
+            RuleFor(x => x.Name).NotEmpty().Length(3, 20);            
             RuleFor(x => x.Description).MaximumLength(30).When(x => !String.IsNullOrEmpty(x.Description));
         }
     }

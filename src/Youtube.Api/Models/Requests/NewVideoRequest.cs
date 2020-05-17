@@ -10,6 +10,7 @@ namespace Youtube.Api.Models.Requests
     public class NewVideoRequest
     {        
         public IFormFile VideoFile { get; set; }
+        public IFormFile VideoPreview { get; set; }
         public string Description { get; set; }
         public string Name { get; set; }        
     }

@@ -8,9 +8,9 @@ namespace Youtube.Api.Core.Dto.Entities
         public UserDto()
         {
             ChannelSubscribers = new HashSet<ChannelSubscriberDto>();
-            Comments = new HashSet<CommentDto>();
+            Comments = new HashSet<CommentDto>();            
             SectionedVideos = new HashSet<SectionedVideoDto>();
-            UploadedFiles = new HashSet<UploadedFileDto>();
+            Videos = new HashSet<VideoDto>();
         }
 
         public int Id { get; set; }
@@ -18,13 +18,13 @@ namespace Youtube.Api.Core.Dto.Entities
         public string Email { get; set; }
         public DateTime BirthDay { get; set; }
         public string PasswordHash { get; set; }
-        public int? ProfilePictureId { get; set; }
+        public int? ImageId { get; set; }
 
-        public ProfilePictureDto ProfilePicture { get; set; }
-        public ChannelDto Channels { get; set; }
-        public ICollection<ChannelSubscriberDto> ChannelSubscribers { get; set; }
-        public ICollection<CommentDto> Comments { get; set; }
-        public ICollection<SectionedVideoDto> SectionedVideos { get; set; }
-        public ICollection<UploadedFileDto> UploadedFiles { get; set; }
+        public virtual ImageDto Image { get; set; }
+        public virtual ChannelDto Channel { get; set; }
+        public virtual ICollection<ChannelSubscriberDto> ChannelSubscribers { get; set; }
+        public virtual ICollection<CommentDto> Comments { get; set; }        
+        public virtual ICollection<SectionedVideoDto> SectionedVideos { get; set; }
+        public virtual ICollection<VideoDto> Videos { get; set; }
     }
 }

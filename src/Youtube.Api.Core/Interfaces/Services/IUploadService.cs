@@ -9,6 +9,6 @@ namespace Youtube.Api.Core.Interfaces.Services
 {
     public interface IUploadService
     {
-        public Task<UploadedFileDto> UploadFile(IFormFile file, int userId, string webRootPath);
+        public Task<UploadedFileDto> UploadFile(IFormFile file, string webRootPath);
     }
 }

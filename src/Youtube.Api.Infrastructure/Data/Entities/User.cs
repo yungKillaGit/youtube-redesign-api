@@ -9,8 +9,9 @@ namespace Youtube.Api.Infrastructure.Data.Entities
         {
             ChannelSubscribers = new HashSet<ChannelSubscriber>();
             Comments = new HashSet<Comment>();
+            Images = new HashSet<Image>();
             SectionedVideos = new HashSet<SectionedVideo>();
-            UploadedFiles = new HashSet<UploadedFile>();
+            Videos = new HashSet<Video>();
         }
 
         public int Id { get; set; }
@@ -18,13 +19,14 @@ namespace Youtube.Api.Infrastructure.Data.Entities
         public string Email { get; set; }
         public DateTime BirthDay { get; set; }
         public string PasswordHash { get; set; }
-        public int? ProfilePictureId { get; set; }
+        public int? ImageId { get; set; }
 
-        public virtual ProfilePicture ProfilePicture { get; set; }
-        public virtual Channel Channels { get; set; }
+        public virtual Image Image { get; set; }
+        public virtual Channel Channel { get; set; }
         public virtual ICollection<ChannelSubscriber> ChannelSubscribers { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<Image> Images { get; set; }
         public virtual ICollection<SectionedVideo> SectionedVideos { get; set; }
-        public virtual ICollection<UploadedFile> UploadedFiles { get; set; }
+        public virtual ICollection<Video> Videos { get; set; }
     }
 }

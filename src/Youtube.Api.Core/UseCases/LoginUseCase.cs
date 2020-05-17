@@ -30,8 +30,8 @@ namespace Youtube.Api.Core.UseCases
             {
                 if (user.PasswordHash == request.PasswordHash)
                 {
-                    Token token = _jwtFactory.GenerateEncodedToken(user.Id, user.Email);
-                    outputPort.Handle(new LoginResponse(token));
+                    Token token = _jwtFactory.GenerateEncodedToken(user);
+                    outputPort.Handle(new LoginResponse(user, token));
                     return true;
                 }
             }

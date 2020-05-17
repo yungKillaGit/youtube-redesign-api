@@ -54,7 +54,7 @@ namespace Youtube.Api.Controllers
             }
             var newChannelRequest = new NewChannelRequest(
                 int.Parse(User.Id()),
-                DateTime.Parse(request.RegistrationDate),
+                DateTime.Now,
                 request.Description,
                 request.Name
             );

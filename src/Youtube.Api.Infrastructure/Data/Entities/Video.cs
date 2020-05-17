@@ -17,8 +17,13 @@ namespace Youtube.Api.Infrastructure.Data.Entities
         public int Dislikes { get; set; }
         public string Description { get; set; }
         public string Name { get; set; }
+        public int UploadedFileId { get; set; }
+        public int UserId { get; set; }
+        public int PreviewImageId { get; set; }
 
-        public virtual UploadedFile IdNavigation { get; set; }
+        public virtual Image PreviewImage { get; set; }
+        public virtual UploadedFile UploadedFile { get; set; }
+        public virtual User User { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<SectionedVideo> SectionedVideos { get; set; }
     }

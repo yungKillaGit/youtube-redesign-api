@@ -20,7 +20,7 @@ namespace Youtube.Api.Presenters
 
         public void Handle(RegisterUserResponse response)
         {
-            ContentResult.StatusCode = (int)(response.Success ? HttpStatusCode.OK : HttpStatusCode.BadRequest);
+            ContentResult.StatusCode = response.Success ? 200 : response.Errors.First().Code;
             ContentResult.Content = JsonSerializer.SerializeObject(response);
         }
     }

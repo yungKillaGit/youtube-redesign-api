@@ -20,13 +20,13 @@ namespace Youtube.Api.Infrastructure.Data.EntityFramework.Repositories
             _database = database;
         }
 
-        public int Create(ChannelDto channelInfo)
+        public ChannelDto Create(ChannelDto channelInfo)
         {
             var channel = _mapper.Map<Channel>(channelInfo);
             _database.Channels.Add(channel);
             _database.SaveChanges();
 
-            return channel.Id;
+            return _mapper.Map<ChannelDto>(channel);
         }
 
         public ChannelDto FindById(int id)

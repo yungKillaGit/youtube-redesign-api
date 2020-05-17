@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,12 +23,12 @@ namespace Youtube.Api.Infrastructure.Data.EntityFramework.Repositories
             _database = database;
         }
 
-        public int Create(VideoDto videoInfo)
+        public VideoDto Create(VideoDto videoInfo)
         {
             var video = _mapper.Map<Video>(videoInfo);
             _database.Videos.Add(video);
             _database.SaveChanges();
-            return video.Id;
+            return _mapper.Map<VideoDto>(video);
         }
 
         public VideoDto FindById(int id)
@@ -38,6 +39,25 @@ namespace Youtube.Api.Infrastructure.Data.EntityFramework.Repositories
         public IEnumerable<VideoDto> FindByName(string name)
         {
             var videos = _database.Videos.Where(x => Regex.Replace(x.Name, @"\s+", " ").ToLower() == name).ToList();
+            return _mapper.Map<IEnumerable<VideoDto>>(videos);
+        }
+
+        public IEnumerable<VideoDto> FindByUserId(int userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<VideoDto> GetAllVideos()
+        {
+            var videos = _database
+                .Videos  
+                .Include(video => video.PreviewImage)
+                .Include(video => video.User)
+                    .ThenInclude(user => user.Image)
+                .Include(video => video.User)
+                    .ThenInclude(user => user.Channel)
+                .ToList();
+            
             return _mapper.Map<IEnumerable<VideoDto>>(videos);
         }
 

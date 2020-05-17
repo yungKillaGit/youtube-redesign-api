@@ -10,7 +10,9 @@ namespace Youtube.Api.Infrastructure.Helpers
         {
             public static class JwtClaimIdentifiers
             {
-                public const string Rol = "rol", Id = "id";
+                public const string Rol = "rol";
+                public const string Id = "id";
+                public const string UserName = "userName";
             }
 
             public static class JwtClaims

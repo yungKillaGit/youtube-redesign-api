@@ -18,16 +18,14 @@ namespace Youtube.Api.Infrastructure.Data
                     Name = "Артур",
                     Email = "test@domain.com",
                     BirthDay = DateTime.Parse("1999-08-17"),
-                    PasswordHash = Cipher.Encrypt("test"),
-                    ProfilePictureId = null,
+                    PasswordHash = Cipher.Encrypt("test"),                    
                 },
                 new User()
                 {
-                    Name = "Смотрящий",
-                    Email = "viewer@domain.com",
+                    Name = "Гость",
+                    Email = "guest@domain.com",
                     BirthDay = DateTime.Parse("1989-08-17"),
-                    PasswordHash = Cipher.Encrypt("test"),
-                    ProfilePictureId = null,
+                    PasswordHash = Cipher.Encrypt("test"),                    
                 },
             };
         }

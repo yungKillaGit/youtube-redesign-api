@@ -1,10 +1,9 @@
-﻿
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Youtube.Api.Infrastructure.Data.Entities;
 
-namespace Youtube.Api.Infrastructure.Data
+namespace Youtube.Api.Infrastructure.Data.EntityFramework
 {
     public partial class YoutubeContext : DbContext
     {
@@ -15,12 +14,13 @@ namespace Youtube.Api.Infrastructure.Data
         public YoutubeContext(DbContextOptions<YoutubeContext> options)
             : base(options)
         {
+            
         }
 
         public virtual DbSet<ChannelSubscriber> ChannelSubscribers { get; set; }
         public virtual DbSet<Channel> Channels { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
-        public virtual DbSet<ProfilePicture> ProfilePictures { get; set; }
+        public virtual DbSet<Image> Images { get; set; }
         public virtual DbSet<SectionedVideo> SectionedVideos { get; set; }
         public virtual DbSet<Section> Sections { get; set; }
         public virtual DbSet<UploadedFile> UploadedFiles { get; set; }
@@ -94,7 +94,7 @@ namespace Youtube.Api.Infrastructure.Data
                 entity.Property(e => e.UserId).HasColumnName("userId");
 
                 entity.HasOne(d => d.User)
-                    .WithOne(p => p.Channels)
+                    .WithOne(p => p.Channel)
                     .HasForeignKey<Channel>(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("channels_userId_fkey");
@@ -130,18 +130,39 @@ namespace Youtube.Api.Infrastructure.Data
                     .HasConstraintName("comments_videoId_fkey");
             });
 
-            modelBuilder.Entity<ProfilePicture>(entity =>
+            modelBuilder.Entity<Image>(entity =>
             {
-                entity.ToTable("profilePictures");
+                entity.ToTable("images");
+
+                entity.HasIndex(e => e.UploadedFileId)
+                    .HasName("images_uploadedFileId_key")
+                    .IsUnique();
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
-                    .ValueGeneratedNever();
+                    .UseIdentityAlwaysColumn();
 
-                entity.HasOne(d => d.IdNavigation)
-                    .WithOne(p => p.ProfilePictures)
-                    .HasForeignKey<ProfilePicture>(d => d.Id)
-                    .HasConstraintName("profilePictures_id_fkey");
+                entity.Property(e => e.EncodedImage)
+                    .IsRequired()
+                    .HasColumnName("encodedImage");
+
+                entity.Property(e => e.ContentType)
+                    .IsRequired()
+                    .HasColumnName("contentType");
+
+                entity.Property(e => e.UploadedFileId).HasColumnName("uploadedFileId");
+
+                entity.Property(e => e.UserId).HasColumnName("userId");
+
+                entity.HasOne(d => d.UploadedFile)
+                    .WithOne(p => p.Image)
+                    .HasForeignKey<Image>(d => d.UploadedFileId)
+                    .HasConstraintName("images_uploadedFileId_fkey");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Images)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("images_userId_fkey");
             });
 
             modelBuilder.Entity<SectionedVideo>(entity =>
@@ -214,14 +235,6 @@ namespace Youtube.Api.Infrastructure.Data
                     .HasColumnName("relativePath");
 
                 entity.Property(e => e.UploadDate).HasColumnName("uploadDate");
-
-                entity.Property(e => e.UserId).HasColumnName("userId");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.UploadedFiles)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("uploadedFiles_userId_fkey");
             });
 
             modelBuilder.Entity<User>(entity =>
@@ -232,8 +245,8 @@ namespace Youtube.Api.Infrastructure.Data
                     .HasName("users_email_key")
                     .IsUnique();
 
-                entity.HasIndex(e => e.ProfilePictureId)
-                    .HasName("users_profilePictureId_key")
+                entity.HasIndex(e => e.ImageId)
+                    .HasName("users_imageId_key")
                     .IsUnique();
 
                 entity.Property(e => e.Id)
@@ -248,6 +261,8 @@ namespace Youtube.Api.Infrastructure.Data
                     .IsRequired()
                     .HasColumnName("email");
 
+                entity.Property(e => e.ImageId).HasColumnName("imageId");
+
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnName("name");
@@ -256,22 +271,32 @@ namespace Youtube.Api.Infrastructure.Data
                     .IsRequired()
                     .HasColumnName("passwordHash");
 
-                entity.Property(e => e.ProfilePictureId).HasColumnName("profilePictureId");
-
-                entity.HasOne(d => d.ProfilePicture)
+                entity.HasOne(d => d.Image)
                     .WithOne(p => p.Users)
-                    .HasForeignKey<User>(d => d.ProfilePictureId)
+                    .HasForeignKey<User>(d => d.ImageId)
                     .OnDelete(DeleteBehavior.SetNull)
-                    .HasConstraintName("users_profilePictureId_fkey");
+                    .HasConstraintName("users_imageId_fkey");
             });
 
             modelBuilder.Entity<Video>(entity =>
             {
                 entity.ToTable("videos");
 
+                entity.HasIndex(e => e.PreviewImageId)
+                    .HasName("videos_previewImageId_key")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.UploadedFileId)
+                    .HasName("videos_uploadedFileId_key")
+                    .IsUnique();
+
+                entity.HasIndex(e => new { e.UploadedFileId, e.PreviewImageId })
+                    .HasName("videos_uploadedFileId_previewImageId_key")
+                    .IsUnique();
+
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
-                    .ValueGeneratedNever();
+                    .UseIdentityAlwaysColumn();
 
                 entity.Property(e => e.Description).HasColumnName("description");
 
@@ -283,12 +308,28 @@ namespace Youtube.Api.Infrastructure.Data
                     .IsRequired()
                     .HasColumnName("name");
 
+                entity.Property(e => e.PreviewImageId).HasColumnName("previewImageId");
+
+                entity.Property(e => e.UploadedFileId).HasColumnName("uploadedFileId");
+
+                entity.Property(e => e.UserId).HasColumnName("userId");
+
                 entity.Property(e => e.Views).HasColumnName("views");
 
-                entity.HasOne(d => d.IdNavigation)
-                    .WithOne(p => p.Videos)
-                    .HasForeignKey<Video>(d => d.Id)
-                    .HasConstraintName("videos_id_fkey");
+                entity.HasOne(d => d.PreviewImage)
+                    .WithOne(p => p.Video)
+                    .HasForeignKey<Video>(d => d.PreviewImageId)
+                    .HasConstraintName("videos_previewImageId_fkey");
+
+                entity.HasOne(d => d.UploadedFile)
+                    .WithOne(p => p.Video)
+                    .HasForeignKey<Video>(d => d.UploadedFileId)
+                    .HasConstraintName("videos_uploadedFileId_fkey");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Videos)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("videos_userId_fkey");
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -18,6 +18,7 @@ namespace Youtube.Api.Core.UseCases
         private readonly IUserRepository _userRepository;
         private readonly IUploadService _uploadService;
         private readonly IVideoRepository _videoRepository;
+        private readonly IImageRepository _imageRepository;
         private readonly IUploadedFileRepository _uploadedFileRepository;
         private readonly IChannelRepository _channelRepository;
 
@@ -25,6 +26,7 @@ namespace Youtube.Api.Core.UseCases
             IUserRepository userRepository,
             IUploadService uploadService,
             IVideoRepository videoRepository,
+            IImageRepository imageRepository,
             IUploadedFileRepository uploadedFileRepository,
             IChannelRepository channelRepository
         )
@@ -32,6 +34,7 @@ namespace Youtube.Api.Core.UseCases
             _userRepository = userRepository;
             _uploadService = uploadService;
             _videoRepository = videoRepository;
+            _imageRepository = imageRepository;
             _uploadedFileRepository = uploadedFileRepository;
             _channelRepository = channelRepository;
         }
@@ -48,19 +51,28 @@ namespace Youtube.Api.Core.UseCases
                 outputPort.Handle(new NewVideoResponse(new[] { new Error(404, "you must have to create channel") }));
                 return false;
             }
-            UploadedFileDto uploadedFileInfo = await _uploadService.UploadFile(request.VideoFile, request.UserId, request.WebRootPath);
-            int fileId = _uploadedFileRepository.Create(uploadedFileInfo);
-            var videoInfo = new VideoDto()
+
+            UploadedFileDto videoInfo = await _uploadService.UploadFile(request.VideoFile, request.WebRootPath);
+            UploadedFileDto previewInfo = await _uploadService.UploadFile(request.VideoPreview, request.WebRootPath);
+
+            UploadedFileDto uploadedVideo = _uploadedFileRepository.Create(videoInfo);
+            UploadedFileDto uploadedPreview = _uploadedFileRepository.Create(previewInfo);
+            previewInfo.Id = uploadedPreview.Id;
+
+            ImageDto videoPreview = _imageRepository.Create(new ImageDto() { UserId = request.UserId }, request.WebRootPath, previewInfo);
+            var video = new VideoDto()
             {
-                Id = fileId,
                 Description = request.Description,
                 Name = request.Name,
                 Views = 0,
                 Likes = 0,
-                Dislikes = 0
+                Dislikes = 0,
+                PreviewImageId = videoPreview.Id,
+                UserId = request.UserId,
+                UploadedFileId = uploadedVideo.Id,
             };
-            int videoId = _videoRepository.Create(videoInfo);
-            outputPort.Handle(new NewVideoResponse(videoId));
+            VideoDto createdVideo = _videoRepository.Create(video);            
+            outputPort.Handle(new NewVideoResponse(createdVideo));
             return true;
         }
     }

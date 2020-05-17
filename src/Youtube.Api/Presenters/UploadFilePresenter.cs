@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Youtube.Api.Core.Dto.UseCaseResponses;
 using Youtube.Api.Core.Interfaces;
@@ -9,18 +8,18 @@ using Youtube.Api.Serialization;
 
 namespace Youtube.Api.Presenters
 {
-    public class LoginPresenter : IOutputPort<LoginResponse>
+    public class UploadFilePresenter : IOutputPort<UploadFileResponse>
     {
         public JsonContentResult ContentResult { get; }
 
-        public LoginPresenter()
+        public UploadFilePresenter()
         {
             ContentResult = new JsonContentResult();
         }
 
-        public void Handle(LoginResponse response)
+        public void Handle(UploadFileResponse response)
         {
-            ContentResult.StatusCode = response.Success ? 200 : response.Errors.First().Code;
+            ContentResult.StatusCode = response.Success ? 200 : response.Error.Code;
             ContentResult.Content = JsonSerializer.SerializeObject(response);
         }
     }
